@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/home.css}">
+  <style>
+    /* 전체 설정 */
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .main_title {
+      text-align: center;
+      width: 1000px;
+      margin-top: 50px;
+      margin-left: 250px;
+      margin-right: 250px;
+    }
+
+    .menu {
+      padding: 50px;
+      margin-left: 10px;
+      margin-right: 10px;
+      width: 1400px;
+    }
+
+    .navigation_menu,
+    .profile,
+    .search_box {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .navigation_menu {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .profile {
+      border: 1px solid green;
+      border-collapse: separate;
+      border-spacing: 5px;
+      padding: 15px;
+    }
+
+    .profile label {
+      display: inline-block;
+      width: 30px;
+      text-align: center;
+    }
+
+    .id_txt {
+      height: 20px;
+      width: 150px;
+      margin-bottom: 5px;
+    }
+
+    .pw_txt {
+      height: 20px;
+      width: 150px;
+    }
+
+    .login_btn {
+      background-color: green;
+      color: white;
+      font-weight: bold;
+      border-color: transparent;
+      font-size: 14px;
+      padding: 1px 5px;
+      height: 27px;
+    }
+
+    .login_btn:hover {
+      cursor: pointer;
+    }
+
+    .sign_up {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 13px;
+      color: #6d6d6d;
+    }
+
+    .sign_up:hover {
+      text-decoration: underline;
+    }
+
+    .navigation_menu ul {
+      background-color: green;
+      width: 800px;
+      height: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0;
+      text-align: center;
+    }
+
+    .navigation_menu li {
+      display: inline;
+      color: white;
+      padding: 8px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 550;
+      line-height: 50px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .navigation_menu li:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .search_txt {
+      height: 25px;
+      width: 180px;
+    }
+
+    .search_btn {
+      background-color: green;
+      color: white;
+      border-color: transparent;
+      font-size: 14px;
+      padding: 3px 5px;
+      height: 30px;
+    }
+
+    .search_btn:hover {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .popular_notice_wrap,
+    .newest_post {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+  .popular {
+  padding: 50px;
+  margin-left: 100px;
+  width: 950px;
+  overflow-x: auto;
+  }
+
+  .popular ul {
+  list-style-type: none;
+  }
+
+  .popular li {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  }
+
+  .popular_newest {
+  margin-top: 30px;
+  }
+
+  .newest_post {
+  width: 200px;
+  height: 500px;
+  background-color: #f6f5f5;
+  margin-left: 60px;
+  }
+
+  .newest_post_title {
+  padding: 20px;
+  }
+
+  .newest_post ul {
+  padding-left: 25px;
+  }
+
+  .newest_post li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  }
+
+  .notice {
+  padding: 50px;
+  margin-top: 20px;
+  margin-left: 100px;
+  width: 950px;
+  }
+
+  .board_list_wrap {
+  padding: 50px;
+  margin-left: 100px;
+  margin-right: 100px;
+  width: 1200px;
+  }
+
+  .board_title {
+  margin-bottom: 30px;
+  }
+
+  .board_list {
+  width: 100%;
+  border-top: 2px solid green;
+  }
+
+  .board_list tr {
+  border-bottom: 1px solid #ccc;
+  }
+
+  .board_list th,
+  .board_list td {
+  padding: 10px;
+  font-size: 14px;
+  }
+
+  .board_list td {
+  text-align: center;
+  }
+
+  .board_list .tit {
+  text-align: left;
+  }
+
+  .board_list .tit:hover {
+  text-decoration: underline;
+  }
+
+  .board_list_wrap .paging {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 0;
+  }
+
+  .board_list_wrap .paging a {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  }
+
+  .board_list_wrap .paging a:first-child {
+  margin-left: 0;
+  }
+
+  .board_list_wrap .paging a.bt {
+  border: 1px solid #eee;
+  background: #eee;
+  }
+
+  .board_list_wrap .paging a.num {
+  font-weight: 600;
+  color: green;
+  }
+
+  .board_list_wrap .paging a.num.on {
+  background: green;
+  color: #fff;
+  }
+
+  .guide {
+  padding: 50px;
+  font-size: 10px;
+  margin-top: 70px;
+  margin-left: 100px;
+  margin-right: 100px;
+  width: 1200px;
+  }
+  </style>
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/signup}" method="post">
+  <label for="username">UserName</label>
+  <input type="text" id="username" name="username" required>
+  <label for="id">ID</label>
+  <input type="text" id="id" name="id" required>
+  <label for="password">Password</label>
+  <input type="password" id="password" name="password" required>
+  <label for="nickname">Nickname</label>
+  <input type="text" id="nickname" name="nickname" required>
+  <input type="submit" value="Sign Up">
+</form>
+<a th:href="@{/}">돌아가기</a>
+</body>
+</html>

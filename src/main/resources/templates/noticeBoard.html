@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>공지게시판</title>
+  <style>
+    /* 중앙 정렬 및 기타 스타일링을 위한 CSS */
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // 수정 및 삭제 버튼의 클릭 이벤트 핸들러
+      // 백엔드에 해당 post의 id를 보내고, 성공적으로 처리된 경우 페이지를 새로 고침
+    });
+  </script>
+</head>
+<body>
+<h1>게시판</h1>
+
+<div style="text-align: center;">
+  <h2>게시글 목록</h2>
+  <table>
+    <!-- 게시글 목록 -->
+    <!-- ... -->
+    <tr th:each="post : ${posts}">
+      <td th:text="${post.id}"></td>
+      <td><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a></td>
+      <td th:text="${post.author.nickname}"></td>
+      <td>
+        <button class="editButton" th:data-id="${post.id}">수정</button>
+        <button class="deleteButton" th:data-id="${post.id}">삭제</button>
+      </td>
+    </tr>
+  </table>
+
+  <div>
+    <form th:action="@{/createPost}" th:method="get">
+      <button type="submit">글 작성</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
