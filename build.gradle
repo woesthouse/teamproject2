@@ -18,8 +18,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.jetbrains:annotations:24.0.1'
-	implementation 'com.h2database:h2'
-	implementation 'com.h2database:h2:1.4.200'
+	runtimeOnly 'com.h2database:h2'
+
+	implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+	implementation 'org.jsoup:jsoup:1.14.3'
 }
 
 tasks.named('test') {
