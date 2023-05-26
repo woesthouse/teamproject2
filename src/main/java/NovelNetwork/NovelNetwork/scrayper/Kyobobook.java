@@ -1,17 +1,20 @@
-package NovelNetwork.NovelNetwork.Service;
+package NovelNetwork.NovelNetwork.scrayper;
 
 import NovelNetwork.NovelNetwork.Domain.Book;
 import NovelNetwork.NovelNetwork.Repository.BookRepository;
 import jakarta.annotation.PostConstruct;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.support.ui.*;
-import org.jsoup.*;
-import org.jsoup.nodes.*;
-import org.jsoup.select.*;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -37,15 +40,14 @@ public class Kyobobook {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
-        //options.addArguments("--headless"); // Uncomment this line to use headless mode
-        //options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537");
+        options.addArguments("--headless");
 
         WebDriver driver = new ChromeDriver(options);
 
         try {
             driver.get("https://product.kyobobook.co.kr/bestseller/online?period=001");
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             wait.until(ExpectedConditions.presenceOfElementLocated(By.className("prod_item")));
 
             String html = driver.getPageSource();
@@ -61,7 +63,7 @@ public class Kyobobook {
                 String imgUrl = item.select("img[data-kbbfn='s3-image']").attr("src");
 
                 // Extract only the author from authorAndDate string
-                String author = authorAndDate.split("\\|")[0].trim();  // '|'는 정규표현식에서 특별한 의미를 갖기 때문에 이스케이프 처리('\\')가 필요합니다.
+                String author = authorAndDate.split("\\|")[0].trim();  // '|'는 정규표현식에서 특별한 의미를 갖기 때문에 이스케이프 처리('\\')가 필요하다.
 
                 // Extract only the first author if multiple authors are listed
                 if (author.contains(" ")) {
@@ -90,7 +92,6 @@ public class Kyobobook {
 
                 insertIntoDB(bookTitle, author, introduction, Float.parseFloat(rating), coverImage);
             }
-
 
 
 
