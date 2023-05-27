@@ -303,6 +303,11 @@
     <div class="search_box">
         <form th:action="@{/search}" method="get">
             <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+            <select name="type">
+                <option value="title">Title</option>
+                <option value="content">Content</option>
+                <option value="writer">Writer</option>
+            </select>
             <button class="search_btn" type="submit">검색</button>
         </form>
     </div>

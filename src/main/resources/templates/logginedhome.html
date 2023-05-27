@@ -279,7 +279,7 @@
 <div class="menu">
   <div class="profile">
     <h4>환영합니다, <span th:text="${user.nickname}"></span>님! 오늘도 좋은 하루 되세요!</h4>
-    <form th:action="@{/home}" method="get">
+    <form th:action="@{/logout}" method="post">
       <button type="submit">로그아웃</button>
     </form>
   </div>
@@ -295,6 +295,11 @@
   <div class="search_box">
     <form th:action="@{/search}" method="get">
       <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+      <select name="type">
+        <option value="title">Title</option>
+        <option value="content">Content</option>
+        <option value="writer">Writer</option>
+      </select>
       <button class="search_btn" type="submit">검색</button>
     </form>
   </div>

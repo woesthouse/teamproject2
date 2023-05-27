@@ -14,14 +14,14 @@ public class Post {
     private String content;
     private String writer;
 
-    private Long userId;
+    private Long userNumber;
 
 
-    public Post(String title, String content, String writer, Long userid) {
+    public Post(String title, String content, String writer, Long userNumber) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.userId = userid;
+        this.userNumber = userNumber;
     }
 
     public Post() {
@@ -67,12 +67,12 @@ public class Post {
         this.postNumber = postNumber;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getUserNumber() {
+        return userNumber;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserNumber(Long userNumber) {
+        this.userNumber = userNumber;
     }
 
     // Getter, Setter, Constructor, equals, hashCode, toString 메서드

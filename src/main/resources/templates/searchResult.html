@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Search Results Page</title>
+  <link rel="stylesheet" href="search.css">
+</head>
+<body>
+<script type="javascript" src="script.js"></script>
+<div class="main_title">
+  <img class="logo_img" src="https://www.shutterstock.com/image-vector/
+        novel-letter-mark-logo-vector-600w-2266746965.jpg" height="160" width="200">
+</div>
+<div class="menu">
+  <!-- 여기서 부터는 프로필 및 메뉴 부분을 수정할 수 있습니다 -->
+</div>
+
+<div class="search_result">
+  <ul>
+    <li th:each="post : ${postList}">
+      <table class="book_info">
+        <thead>
+        </thead>
+        <tbody>
+        <tr>
+          <!--<td rowspan="3">
+          <img id="book_img" src="https://image.aladin.co.kr/product/28542/89/cover500/k052835237_1.jpg" height="150" width="100">
+          </td>-->
+          <td class="book_title" th:text="${post.title}">Title</td>
+        </tr>
+        <tr>
+          <td class="book_author" th:text="${post.writer}">Author</td>
+        </tr>
+        <tr>
+          <td class="book_content" th:text="${post.content}">Content</td>
+        </tr>
+        </tbody>
+      </table>
+    </li>
+  </ul>
+  <!-- 여기서 부터는 페이징 부분을 수정할 수 있습니다 -->
+</div>
+
+<div class="guide">
+  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+</div>
+</body>
+</html>

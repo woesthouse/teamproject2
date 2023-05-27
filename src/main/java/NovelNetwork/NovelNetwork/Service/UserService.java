@@ -44,7 +44,22 @@ public class UserService {
         return user != null;
     }
 
+
     public User loginUser(String id, String password) {
         return userRepository.findByIdAndPassword(id, password);
     }
+
+    public Boolean checkId(String id) {
+        return userRepository.existsById(id);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User findById(String id) {
+        return userRepository.findById(id);
+    }
+
+
 }

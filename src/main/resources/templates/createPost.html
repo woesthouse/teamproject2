@@ -7,7 +7,7 @@
 <body>
 <div class="container">
     <h1>새 글 작성</h1>
-    <form action="/board/new" method="post" th:object="${post}">
+    <form th:action="@{/board/new}" method="post" th:object="${post}">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
