@@ -10,7 +10,7 @@
   <h1>Notice Board</h1>
 
   <div th:if="${user != null}">
-    <p>환엽합니다, <span th:text="${user.nickname}"></span>님!</p>
+    <p>환영합니다, <span th:text="${user.nickname}"></span>님!</p>
     <a href="/logout" class="btn btn-warning">Logout</a>
   </div>
   <div th:if="${user == null}">

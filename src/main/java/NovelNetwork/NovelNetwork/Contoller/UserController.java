@@ -1,6 +1,7 @@
 package NovelNetwork.NovelNetwork.Contoller;
 
 import NovelNetwork.NovelNetwork.Domain.User;
+import NovelNetwork.NovelNetwork.Service.BookService;
 import NovelNetwork.NovelNetwork.Service.EmailService;
 import NovelNetwork.NovelNetwork.Service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -22,15 +23,20 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private BookService bookService;
+
 
     @GetMapping({"/home", "/"})
     public String home(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
             model.addAttribute("user", user);
+            model.addAttribute("top10Books", bookService.getTop10());
             return "logginedhome";
         }
         else {
+            model.addAttribute("top10Books", bookService.getTop10());
             return "home";
         }
     }

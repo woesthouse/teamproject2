@@ -270,6 +270,21 @@
   margin-right: 100px;
   width: 1200px;
   }
+
+  .popular {
+        padding: 50px;
+        margin-left: 100px;
+        width: 950px;
+        overflow-x: auto;  /* Added for horizontal scrolling */
+        overflow-y: hidden;  /* Hidden vertical scroll */
+        white-space: nowrap;  /* Text will stay on a single line */
+    }
+
+    .book_cover_image {
+        max-width: 100px; /* Set width of book image */
+        max-height: 150px; /* Set height of book image */
+        object-fit: cover; /* Cover entire space of image area without stretching the image */
+    }
   </style>
 </head>
 <body>
@@ -316,11 +331,31 @@
 <div class="popular_notice_wrap">
 
     <div class="popular">
-        <ul>
-            <li class="popular_all"><a th:href="@{/totalTop10}">전체 Top 10</a></li>
-            <li class="popular_newest"><a th:href="@{/recentTop10}">최신 Top 10</a></li>
-        </ul>
+        <h2>전체 Top 10</h2>
+        <div class="book_list" style="display: flex; overflow-x: auto;">
+            <div th:each="book : ${top10Books}" style="flex-shrink: 0; width: 200px; height: 300px; margin-right: 20px;">
+                <a th:href="@{'/book/' + ${book.bookId}}">
+                    <img th:src="@{${book.coverImage}}" alt="Book Cover" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="book_title" th:text="${book.title}"></div>
+                    <div class="book_author" th:text="${book.author}"></div>
+                    <div class="book_rating" th:text="${book.rating}"></div>
+                </a>
+            </div>
+        </div>
     </div>
+
+   <!-- <div class="popular_newest">
+        <h2>최신 Top 10</h2>
+        <div class="book_list" th:each="book : ${recentTop10Books}">
+            <a th:href="@{'/book/' + ${book.bookId}}">
+                <img th:src="${book.coverImage}" alt="Book Cover" class="book_cover_image">
+                <div class="book_title" th:text="${book.title}"></div>
+                <div class="book_author" th:text="${book.author}"></div>
+                <div class="book_rating" th:text="${book.rating}"></div>
+            </a>
+        </div>
+    </div>-->
+
 
     <div class="notice">
         <h2 class="board_title">공지 게시판</h2>

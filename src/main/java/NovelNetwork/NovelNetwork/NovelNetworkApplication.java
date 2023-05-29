@@ -14,5 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class NovelNetworkApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NovelNetworkApplication.class, args);
+
 	}
 }
