@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Review</title>
+</head>
+<body>
+<h1>Create a new review</h1>
+<form action="#" th:action="@{/reviewBoard/new}" th:object="${review}" method="post">
+  <label for="book">Select a book:</label>
+  <select id="book" name="bookId">
+    <option th:each="book : ${books}" th:value="${book.bookId}" th:text="${book.title}"></option>
+  </select>
+
+  <label for="title">Title:</label>
+  <input type="text" id="title" th:field="*{title}">
+
+  <label for="content">Contents:</label>
+  <textarea id="content" th:field="*{content}"></textarea>
+
+  <label for="starRating">Rating:</label>
+  <input type="number" id="starRating" th:field="*{starRating}">
+
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>

@@ -33,7 +33,6 @@ public class PostController {
     }
 
 
-
     @GetMapping("/createPost")
     public String createPost(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");

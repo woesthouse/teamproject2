@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Post Detail</title>
+</head>
+<body>
+<h1>Post Details</h1>
+
+<div>
+  <h2 th:text="${review.title}"></h2> <!-- 게시물 제목 -->
+  <p>By: <span th:text="${review.writer}"></span></p> <!-- 게시물 작성자 -->
+  <p th:text="${review.content}"></p> <!-- 게시물 내용 -->
+</div>
+
+<a th:href="@{'/noticeBoard'}">Back to the Notice Board</a> <!-- 공지사항 게시판으로 돌아가기 -->
+</body>
+</html>
