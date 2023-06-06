@@ -69,7 +69,7 @@ public class ReviewController {
         return "redirect:/reviewBoard";
     }
 
-    @GetMapping("/{bookId}/reviews")
+    @GetMapping("/{reviewId}/reviews")
     public String reviewDetail(@RequestParam Long reviewId, @PathVariable Long bookId, Model model) {
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
         if (optionalReview.isPresent()) {
