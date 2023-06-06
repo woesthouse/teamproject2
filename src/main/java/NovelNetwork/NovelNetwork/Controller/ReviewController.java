@@ -102,7 +102,7 @@ public class ReviewController {
     }
 
     @PostMapping("/reviewBoard/edit/{reviewId}")
-    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @RequestBody Review review, HttpSession session
+    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @ModelAttribute Review review, HttpSession session
                                             ,Book book) {
         User user = (User) session.getAttribute("user");
 
@@ -116,7 +116,7 @@ public class ReviewController {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
-
+        existingReview.getBook().setBookId(review.getBook().getBookId());
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setContent(review.getContent());
