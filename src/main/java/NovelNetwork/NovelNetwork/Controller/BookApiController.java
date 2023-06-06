@@ -1,4 +1,4 @@
-package NovelNetwork.NovelNetwork.Contoller;
+package NovelNetwork.NovelNetwork.Controller;
 
 import NovelNetwork.NovelNetwork.Domain.Book;
 import NovelNetwork.NovelNetwork.Domain.Review;

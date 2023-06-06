@@ -95,5 +95,6 @@ public class Review {
     public void setUserNumber(Long userNumber) {
         this.userNumber = userNumber;
     }
+
     // Getter, Setter, Constructor, equals, hashCode, toString 메서드
 }

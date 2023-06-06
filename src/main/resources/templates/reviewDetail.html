@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <title>Review Detail</title>
   <meta charset="UTF-8">
-  <title>Post Detail</title>
 </head>
 <body>
-<h1>Post Details</h1>
-
 <div>
-  <h2 th:text="${review.title}"></h2> <!-- 게시물 제목 -->
-  <p>By: <span th:text="${review.writer}"></span></p> <!-- 게시물 작성자 -->
-  <p th:text="${review.content}"></p> <!-- 게시물 내용 -->
+  <h1>Review Detail</h1>
+  <div th:if="${review != null}">
+    <h2 th:text="${review.title}"></h2>
+    <p>Written by <span th:text="${review.writer}"></span></p>
+    <p th:text="${review.content}"></p>
+    <p>Posted on <span th:text="${review.creationDate}"></span></p>
+    <p>Book ID: <span th:text="${review.book.bookId}"></span></p>
+  </div>
+  <div th:if="${review == null}">
+    <p>No review found.</p>
+  </div>
 </div>
-
-<a th:href="@{'/noticeBoard'}">Back to the Notice Board</a> <!-- 공지사항 게시판으로 돌아가기 -->
+<div>
+  <a href="/reviewBoard">Back to Review Board</a>
+</div>
 </body>
 </html>

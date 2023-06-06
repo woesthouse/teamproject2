@@ -1,4 +1,4 @@
-package NovelNetwork.NovelNetwork.Contoller;
+package NovelNetwork.NovelNetwork.Controller;
 
 import NovelNetwork.NovelNetwork.Domain.Post;
 import NovelNetwork.NovelNetwork.Domain.User;
@@ -6,7 +6,6 @@ import NovelNetwork.NovelNetwork.Service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,4 +1,4 @@
-package NovelNetwork.NovelNetwork.Contoller;
+package NovelNetwork.NovelNetwork.Controller;
 
 import NovelNetwork.NovelNetwork.Service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;

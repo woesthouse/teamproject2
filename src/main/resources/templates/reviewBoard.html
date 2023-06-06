@@ -34,6 +34,8 @@
                 <a th:href="@{/{bookId}/reviews(reviewId=${post.reviewId})}" th:text="${post.title}"></a>
             </td>
             <td th:text="${post.writer}"></td>
+            <td th:text="${post.book.title}"></td>
+            <td th:text="${post.starRating}"></td>
             <td>
                 <a th:href="@{/review/edit/{id}(id=${post.reviewId})}"
                    th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-primary' : 'btn btn-primary disabled'}">Edit</a>

@@ -1,15 +1,12 @@
-package NovelNetwork.NovelNetwork.Contoller;
+package NovelNetwork.NovelNetwork.Controller;
 
 import NovelNetwork.NovelNetwork.Domain.Book;
-import NovelNetwork.NovelNetwork.Domain.Post;
 import NovelNetwork.NovelNetwork.Domain.Review;
 import NovelNetwork.NovelNetwork.Domain.User;
 import NovelNetwork.NovelNetwork.Service.BookService;
 import NovelNetwork.NovelNetwork.Service.ReviewService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +58,10 @@ public class ReviewController {
         review.setUserNumber(user.getUserNumber());
         review.setWriter(user.getNickname());
 
-        int bookId = book.getBookId();
-        reviewService.addReview(review, bookId);
+        review.setUser(user);
+
+
+        reviewService.addReview(review, book.getBookId());
 
         List<Review> reviews = reviewService.getAllReview();
         model.addAttribute("reviews", reviews);
@@ -71,7 +70,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{bookId}/reviews")
-    public String reviewDetail(@PathVariable Long reviewId, Model model) {
+    public String reviewDetail(@RequestParam Long reviewId, @PathVariable Long bookId, Model model) {
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
         if (optionalReview.isPresent()) {
             model.addAttribute("review", optionalReview.get());
@@ -80,6 +79,7 @@ public class ReviewController {
             return "error";
         }
     }
+
 /*
     @GetMapping("/post/edit/{postNumber}")
     public String showEditForm(@PathVariable Long postNumber, Model model, HttpSession session) {
