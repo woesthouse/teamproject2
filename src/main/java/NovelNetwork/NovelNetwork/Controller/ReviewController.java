@@ -91,6 +91,9 @@ public class ReviewController {
         if (optionalReview.isPresent()) {
             Review existingReview = optionalReview.get();
             if (existingReview.getUserNumber().equals(user.getUserNumber())) {
+                List<Book> books = bookService.findAll();
+                model.addAttribute("books", books);
+                model.addAttribute("user", user);
                 model.addAttribute("review", existingReview);
                 return "editReview";
             } else {
@@ -115,8 +118,7 @@ public class ReviewController {
         if (!existingReview.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-
-        existingReview.getBook().setBookId(review.getBook().getBookId());
+        existingReview.setBook(review.getBook());
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setContent(review.getContent());

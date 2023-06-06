@@ -19,7 +19,9 @@
         </div>
         <div>
             <label for="book">Book:</label>
-            <input type="text" id="book" th:field="*{book.bookId}" required>
+            <select id="book" name="bookId">
+                <option th:each="book : ${books}" th:value="${book.bookId}" th:text="${book.title}"></option>
+            </select>
         </div>
         <div>
             <label for="starRating">Rating:</label>
