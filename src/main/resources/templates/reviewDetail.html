@@ -11,7 +11,6 @@
     <h2 th:text="${review.title}"></h2>
     <p>Written by <span th:text="${review.writer}"></span></p>
     <p th:text="${review.content}"></p>
-    <p>Posted on <span th:text="${review.creationDate}"></span></p>
     <p>Book ID: <span th:text="${review.book.bookId}"></span></p>
   </div>
   <div th:if="${review == null}">

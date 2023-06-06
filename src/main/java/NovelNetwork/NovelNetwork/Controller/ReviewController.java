@@ -7,6 +7,8 @@ import NovelNetwork.NovelNetwork.Service.BookService;
 import NovelNetwork.NovelNetwork.Service.ReviewService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +71,8 @@ public class ReviewController {
         return "redirect:/reviewBoard";
     }
 
-    @GetMapping("/{reviewId}/reviews")
-    public String reviewDetail(@RequestParam Long reviewId, @PathVariable Long bookId, Model model) {
+    @GetMapping("/reviews/{reviewId}")
+    public String reviewDetail( @PathVariable Long reviewId, Model model) {
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
         if (optionalReview.isPresent()) {
             model.addAttribute("review", optionalReview.get());
@@ -80,17 +82,17 @@ public class ReviewController {
         }
     }
 
-/*
-    @GetMapping("/post/edit/{postNumber}")
-    public String showEditForm(@PathVariable Long postNumber, Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        Optional<Post> optionalPost = postService.getPostByPostNumber(postNumber);
 
-        if (optionalPost.isPresent()) {
-            Post existingPost = optionalPost.get();
-            if (existingPost.getUserNumber().equals(user.getUserNumber())) {
-                model.addAttribute("post", existingPost);
-                return "editPost";
+    @GetMapping("/review/edit/{reviewId}")
+    public String showEditForm(@PathVariable Long reviewId, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
+
+        if (optionalReview.isPresent()) {
+            Review existingReview = optionalReview.get();
+            if (existingReview.getUserNumber().equals(user.getUserNumber())) {
+                model.addAttribute("review", existingReview);
+                return "editReview";
             } else {
                 return "error";
             }
@@ -99,28 +101,31 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("/post/edit/{postNumber}")
-    public ResponseEntity<String> editPost(@PathVariable Long postNumber, @RequestBody Post post, HttpSession session) {
+    @PostMapping("/reviewBoard/edit/{reviewId}")
+    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @RequestBody Review review, HttpSession session
+                                            ,Book book) {
         User user = (User) session.getAttribute("user");
 
-        Optional<Post> optionalPost = postService.getPostByPostNumber(postNumber);
-        if (!optionalPost.isPresent()) {
+        Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
+        if (!optionalReview.isPresent()) {
             return new ResponseEntity<>("No post found", HttpStatus.NOT_FOUND);
         }
 
-        Post existingPost = optionalPost.get();
-        if (!existingPost.getUserNumber().equals(user.getUserNumber())) {
+        Review existingReview = optionalReview.get();
+        if (!existingReview.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
-        existingPost.setTitle(post.getTitle());
-        existingPost.setContent(post.getContent());
-        postService.updatePost(existingPost);
 
-        return new ResponseEntity<>("Post updated successfully!", HttpStatus.OK);
+        existingReview.setStarRating(review.getStarRating());
+        existingReview.setTitle(review.getTitle());
+        existingReview.setContent(review.getContent());
+        reviewService.updateReview(existingReview);
+
+        return new ResponseEntity<>("Review updated successfully!", HttpStatus.OK);
     }
 
-
+/*
 
     @DeleteMapping("/post/delete/{postNumber}")
     public ResponseEntity<String> deletePost(@PathVariable Long postNumber, HttpSession session) {

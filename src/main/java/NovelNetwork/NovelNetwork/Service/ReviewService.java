@@ -35,6 +35,9 @@ public class ReviewService {
     public Optional<Review> getReviewByReviewNumber(Long ReviewId) {
         return (reviewRepository.findByReviewId(ReviewId));
     }
+    public void updateReview(Review existingReview) {
+        reviewRepository.save(existingReview);
+    }
 
     @Transactional
     public Review saveReviewPostWithBook(Review reviewPost, Integer bookId) {

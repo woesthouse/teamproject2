@@ -96,5 +96,6 @@ public class Review {
         this.userNumber = userNumber;
     }
 
+
     // Getter, Setter, Constructor, equals, hashCode, toString 메서드
 }

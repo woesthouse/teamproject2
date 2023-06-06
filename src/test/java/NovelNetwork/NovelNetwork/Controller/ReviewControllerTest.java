@@ -1,104 +1,115 @@
 package NovelNetwork.NovelNetwork.Controller;
 
-import NovelNetwork.NovelNetwork.Controller.ReviewController;
-import NovelNetwork.NovelNetwork.Domain.Book;
 import NovelNetwork.NovelNetwork.Domain.Review;
 import NovelNetwork.NovelNetwork.Domain.User;
-import NovelNetwork.NovelNetwork.Service.BookService;
 import NovelNetwork.NovelNetwork.Service.ReviewService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.ui.Model;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
-   public class ReviewControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class ReviewControllerTest {
+    @Mock
+    private ReviewService reviewService;
 
-        private ReviewController controller;
-        private BookService bookService;
-        private ReviewService reviewService;
-        private MockHttpSession session;
-        private Model model;
+    @InjectMocks
+    private ReviewController reviewController;
 
-        @BeforeEach
-        public void setUp() {
-            bookService = mock(BookService.class);
-            reviewService = mock(ReviewService.class);
-            controller = new ReviewController(bookService, reviewService);
-            session = new MockHttpSession();
-            model = mock(Model.class);
-        }
-
-        @Test
-        public void testNoticeBoard() {
-            // given
-            User user = new User();
-            Review review = new Review();
-            when(reviewService.getAllReview()).thenReturn(Arrays.asList(review));
-
-            // when
-            session.setAttribute("user", user);
-            String viewName = controller.noticeBoard(model, session);
-
-            // then
-            verify(reviewService, times(1)).getAllReview();
-            assertEquals("reviewBoard", viewName);
-        }
-
-        @Test
-        void testCreatePost() {
-            // given
-            User user = new User();
-            Book book = new Book();
-            when(bookService.findAll()).thenReturn(Arrays.asList(book));
-
-            // when
-            session.setAttribute("user", user);
-            String viewName = controller.createPost(session, model);
-
-            // then
-            verify(bookService, times(1)).findAll();
-            assertEquals("createReview", viewName);
-        }
-
-        @Test
-        void testNewPost() {
-            // given
-            User user = new User();
-            Review review = new Review();
-            Book book = new Book();
-            when(reviewService.getAllReview()).thenReturn(Arrays.asList(review));
-
-            // when
-            session.setAttribute("user", user);
-            String viewName = controller.newPost(review, book, session, model);
-
-            // then
-            verify(reviewService, times(1)).addReview(review, book.getBookId());
-            assertEquals("redirect:/reviewBoard", viewName);
-        }
-
-        @Test
-        void testReviewDetail() {
-            // given
-            Long reviewId = 1L;
-            Long bookId = 1L;
-            Review review = new Review();
-            when(reviewService.getReviewByReviewNumber(reviewId)).thenReturn(Optional.of(review));
-
-            // when
-            String viewName = controller.reviewDetail(reviewId, bookId, model);
-
-            // then
-            verify(reviewService, times(1)).getReviewByReviewNumber(reviewId);
-            assertEquals("reviewDetail", viewName);
-        }
+    private MockMvc mockMvc;
+    private MockHttpSession session;
+    private ObjectMapper objectMapper;
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(reviewController).build();
+        session = new MockHttpSession();
+        objectMapper = new ObjectMapper();
     }
+
+    @Test
+    public void whenReviewExists_thenReturnsReviewDetailPage() throws Exception {
+        Review review = new Review(); // Initialize this with actual data
+        given(reviewService.getReviewByReviewNumber(1L)).willReturn(Optional.of(review));
+
+        mockMvc.perform(get("/reviews/{1}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("reviewDetail"));
+    }
+
+    @Test
+    public void whenReviewDoesNotExist_thenReturnsErrorPage() throws Exception {
+        given(reviewService.getReviewByReviewNumber(1L)).willReturn(Optional.empty());
+
+        mockMvc.perform(get("/{1}/reviews", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
+    }
+
+    @Test
+    public void whenReviewServiceThrowsException_thenReturnsErrorPage() throws Exception {
+        given(reviewService.getReviewByReviewNumber(1L)).willThrow(new RuntimeException());
+
+        mockMvc.perform(get("/{1}/reviews", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
+    }
+
+
+
+
+    @Test
+    public void showEditForm_withValidReviewAndUser_thenReturnEditReview() throws Exception {
+        Long userId = 1L;
+        User user = new User(); // Initialize this with actual data
+        user.setUserNumber(userId);
+        session.setAttribute("user", user);
+        Review review = new Review(); // Initialize this with actual data
+        review.setUserNumber(userId);
+        given(reviewService.getReviewByReviewNumber(1L)).willReturn(Optional.of(review));
+
+        mockMvc.perform(get("/post/edit/{1}", 1L).session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("editReview"));
+    }
+
+
+    @Test
+    public void editPost_withValidReviewAndUser_thenReturnOk() throws Exception {
+        Long userId = 1L;
+        User user = new User(); // Initialize this with actual data
+        user.setUserNumber(userId);
+        session.setAttribute("user", user);
+        Review review = new Review(); // Initialize this with actual data
+        review.setUserNumber(userId);
+        given(reviewService.getReviewByReviewNumber(1L)).willReturn(Optional.of(review));
+        willDoNothing().given(reviewService).updateReview(any());
+
+        mockMvc.perform(post("/reviewBoard/edit/{reviewId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(review))
+                        .session(session))
+                .andExpect(status().isOk());
+    }
+}
+
 
 

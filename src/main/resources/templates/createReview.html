@@ -19,7 +19,7 @@
   <textarea id="content" th:field="*{content}"></textarea>
 
   <label for="starRating">Rating:</label>
-  <input type="number" id="starRating" th:field="*{starRating}">
+  <input type="number" id="starRating" th:field="*{starRating}" required min="1" max="5">
 
   <input type="submit" value="Submit">
 </form>

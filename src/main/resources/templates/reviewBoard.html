@@ -31,7 +31,7 @@
         <tr th:each="post : ${posts}">
             <td th:text="${post.reviewId}"></td>
             <td>
-                <a th:href="@{/{bookId}/reviews(reviewId=${post.reviewId})}" th:text="${post.title}"></a>
+                <a th:href="@{/reviews/{reviewId}(reviewId=${post.reviewId})}" th:text="${post.title}"></a>
             </td>
             <td th:text="${post.writer}"></td>
             <td th:text="${post.book.title}"></td>
