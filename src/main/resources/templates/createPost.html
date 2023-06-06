@@ -3,21 +3,150 @@
 <head>
     <title>글 작성</title>
     <!-- 추가적인 CSS, JavaScript 등의 링크 혹은 스크립트 -->
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .main_title {
+      text-align: center;
+      width: 1000px;
+      margin-top: 50px;
+      margin-left: 250px;
+      margin-right: 250px;
+    }
+
+    .menu {
+      padding: 50px;
+      margin-left: 10px;
+      margin-right: 10px;
+      width: 1400px;
+    }
+
+    .navigation_menu {
+        vertical-align: middle;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .navigation_menu ul {
+      background-color: green;
+      /* width: 800px; */
+      height: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0;
+      text-align: center;
+    }
+
+    .navigation_menu li {
+      display: inline;
+      color: white;
+      padding: 8px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 550;
+      line-height: 50px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .navigation_menu li:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+        padding: 50px;
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+
+    .write_title {
+        margin-bottom: 50px;
+        text-align: left;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    #title {
+        height: 40px;
+        width: 1000px;
+        font-size: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
+    } 
+
+    #content {
+        height: 400px;
+        width: 1000px;
+        font-size: 15px;
+        padding: 10px;
+        resize: none;
+    }
+
+    .post_btn {
+        text-align: right;
+    }
+
+    #post_btn_id {
+        margin-top: 15px;
+        border: transparent;
+        width: 80px;
+        height: 40px;
+        background: green;
+        color: white;
+        font-size: 17px;
+        font-weight: bold;
+    } 
+
+    #post_btn_id:hover {
+        cursor: pointer;
+    }
+    </style>
 </head>
 <body>
+<div class="main_title">
+    <h1>Welcome to Novel Network</h1>
+</div>
+    
+<div class="menu">
+    <div class="navigation_menu">
+        <ul>
+            <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+            <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+            <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+            <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+            <li><a th:href="@{/event}">*이벤트*</a></li>
+        </ul>
+    </div>
+</div>    
 <div class="container">
-    <h1>새 글 작성</h1>
-    <form th:action="@{/board/new}" method="post" th:object="${post}">
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
-        </div>
-        <div class="form-group">
-            <label for="content">내용</label>
-            <textarea id="content" name="content" th:field="*{content}" rows="5" placeholder="내용을 입력하세요" required></textarea>
-        </div>
-        <button type="submit">작성 완료</button>
-    </form>
+    <div class="write_title">
+        <h1>새 글 작성</h1>
+    </div>
+    <div class="write_area">
+        <form th:action="@{/board/new}" method="post" th:object="${post}">
+            <div class="form-group">
+                <input type="text" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <textarea id="content" name="content" th:field="*{content}" placeholder="내용을 입력하세요" required></textarea>
+            </div>
+            <input id="file_btn" type="file" name="SelectFile">
+            <div class="post_btn">
+                <button type="submit" id="post_btn_id">등록</button>
+            </div>
+        </form>
+    </div> 
 </div>
 </body>
 </html>

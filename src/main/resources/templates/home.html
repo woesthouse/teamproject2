@@ -20,10 +20,10 @@
     }
 
     .menu {
-      padding: 50px;
+      padding: 50px 20px;
       margin-left: 10px;
       margin-right: 10px;
-      width: 1400px;
+      width: 1450px;
     }
 
     .navigation_menu,
@@ -114,9 +114,13 @@
       cursor: pointer;
     }
 
+    /* .search_box {
+      width: 310px;
+    } */
+
     .search_txt {
       height: 25px;
-      width: 180px;
+      width: 170px;
     }
 
     .search_btn {
@@ -344,19 +348,6 @@
         </div>
     </div>
 
-   <!-- <div class="popular_newest">
-        <h2>최신 Top 10</h2>
-        <div class="book_list" th:each="book : ${recentTop10Books}">
-            <a th:href="@{'/book/' + ${book.bookId}}">
-                <img th:src="${book.coverImage}" alt="Book Cover" class="book_cover_image">
-                <div class="book_title" th:text="${book.title}"></div>
-                <div class="book_author" th:text="${book.author}"></div>
-                <div class="book_rating" th:text="${book.rating}"></div>
-            </a>
-        </div>
-    </div>-->
-
-
     <div class="notice">
         <h2 class="board_title">공지 게시판</h2>
         <table class="board_list">
@@ -375,22 +366,18 @@
 
 <div class="newest_post">
     <h3 class="newest_post_title">최근에 작성된 글</h3>
-    <ul th:each="post : ${recentPosts}">
-        <li><a th:href="@{'/post/' + ${post}"></a>
-            <div class="newest_post">
-                <h3 class="newest_post_title">최근에 작성된 글</h3>
-                <ul th:each="post : ${recentPosts}">
-                    <li><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a></li>
-                </ul>
-            </div>
+        <ul th:each="post : ${recentPosts}">
+            <li><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a></li>
+        </ul>
+</div>
 
-            <div class="guide">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the
-                    1500s, when an unknown printer took a galley of type and scrambled it to
-                    make a type specimen book.
-                </p>
-            </div>
+<div class="guide">
+    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Lorem Ipsum has been the industry's standard dummy text ever since the
+      1500s, when an unknown printer took a galley of type and scrambled it to
+      make a type specimen book.
+    </p>
+</div>
 
 </body>
 </html>

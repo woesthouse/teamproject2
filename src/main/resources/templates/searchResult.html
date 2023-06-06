@@ -1,254 +1,252 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Search Results Page</title>
-  <link rel="stylesheet" href="search.css">
-  <style>
-  * {   /*전체 설정*/
-  margin: 0;
-  padding: 0;
-  }
+<title>Search Results Page</title>
+<link rel="stylesheet" href="search.css">
+<style>
+/* 전체 설정 */
+* {
+    margin: 0;
+    padding: 0;
+}
 
-  .main_title {
-  text-align: center;
-  /* width: 1510px; */
-  width: 1000px;
-  margin-left: 250px;
-  margin-right: 250px;
-  }
+.main_title {
+    text-align: center;
+    width: 1000px;
+    margin-top: 50px;
+    margin-left: 250px;
+    margin-right: 250px;
+}
 
-  .menu {
-  padding: 50px;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 1400px;
-  }
+.menu {
+    padding: 50px 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 1450px;
+}
 
-  .navigation_menu,
-  .profile,
-  .search_box {
-  display: inline-block;
-  vertical-align: middle;
-  }
+.navigation_menu,
+.profile,
+.search_box {
+    display: inline-block;
+    vertical-align: middle;
+}
 
-  .navigation_menu {
-  padding-left: 30px;
-  padding-right: 30px;
-  }
+.navigation_menu {
+    padding-left: 30px;
+    padding-right: 30px;
+}
 
-  .profile_list {
-  border: 1px solid green;
-  border-collapse: separate;
-  border-spacing: 5px;
-  }
+.profile {
+    border: 1px solid green;
+    border-collapse: separate;
+    border-spacing: 5px;
+    padding: 15px;
+    width: 250px;
+    height: 90px;
+}
 
-  .profile_list td {
-  padding-left: 15px;
-  padding-right: 15px;
-  height: 40px;
-  font-size: 14px;
-  text-align: center;
-  }
+.nickname {
+    line-height: 60px;
+}
 
-  #nickname {
-  font-size: 16px;
-  font-weight: bold;
-  color: green;
-  }
+#logout {
+    border: transparent;
+    background-color: transparent;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 13px;
+    color: #6d6d6d;
+}
 
-  .navigation_menu ul {
-  background-color: green;
-  width: 800px;
-  height: 50px;
-  /* margin: 0; */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0;
-  text-align: center;
-  }
+#logout:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 
-  .navigation_menu li {
-  display: inline;
-  color: white;
-  padding: 8px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 550;
-  line-height: 50px;
-  padding-left: 20px;
-  padding-right: 20px;
-  }
+.navigation_menu ul {
+    background-color: green;
+    width: 800px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    text-align: center;
+}
 
-  .navigation_menu li:hover {
-  text-decoration: underline;
-  }
+.navigation_menu li {
+    display: inline;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 550;
+    line-height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
-  .search_txt {
-  height: 25px;
-  width: 180px;
-  }
+.navigation_menu li:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 
-  .search_btn {  /*검색 버튼*/
-  background-color: green;
-  color: white;
-  border-color: transparent;
-  font-size: 14px;
-  padding: 3px 5px;
-  height: 30px;
-  }
+.search_txt {
+    height: 25px;
+    width: 170px;
+}
 
-  .search_btn:hover {
-  cursor: pointer;
-  }
+.search_btn {
+    background-color: green;
+    color: white;
+    border-color: transparent;
+    font-size: 14px;
+    padding: 3px 5px;
+    height: 30px;
+}
 
-  table {  /*테이블 테두리 스타일*/
-  border-collapse: collapse;
-  }
+.search_btn:hover {
+    cursor: pointer;
+}
 
-  caption {  /* Hide table caption */
-  display: none;
-  }
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-  a {  /* Set link styles */
-  text-decoration: none;
-  color: inherit;
-  }
+.search_result {
+    padding: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
+    width: 1200px;
+}
 
-  .search_result {
-  padding: 50px;
-  margin-left: 100px;
-  margin-right: 100px;
-  width: 1200px;
-  }
+.search_result ul {
+    list-style-type: none;
+}
 
-  .search_result ul {
-  list-style-type: none;
-  }
+.book_info_wrap {
+    margin: 50px 10px;
+}
 
-  .book_info_wrap {
-  margin: 50px 10px;
-  }
+.book_info {
+    margin: 20px;
+}
 
-  .book_info {
-  margin: 20px;
-  }
+.book_info td {
+    vertical-align: top;
+}
 
-  .book_info td {
-  vertical-align: top;
-  }
+.book_img {
+    margin: 10px;
+}
 
-  .book_img {
-  margin: 10px;
-  }
+.book_title {
+    height: 20px;
+    padding-top: 5px;
+    padding-left: 10px;
+    margin-bottom: 3px;
+    font-weight: bold;
+    font-size: 25px;
+    color: green;
+}
 
-  .book_title {
-  height: 20px;
-  padding-top: 5px;
-  padding-left: 10px;
-  margin-bottom: 3px;
-  font-weight: bold;
-  font-size: 25px;
-  color: green;
-  }
+.book_author {
+    height: 20px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 15px;
+}
 
-  .book_author {
-  height: 20px;
-  padding-left: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  font-size: 15px;
-  }
+.book_content {
+    padding-left: 10px;
+}
 
-  .book_content {
-  padding-left: 10px;
-  }
+.search_result .paging {  /* Set pagination wrapper styles */
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0;
+}
 
-  .search_result .paging {  /* Set pagination wrapper styles */
-  margin-top: 50px;
-  text-align: center;
-  font-size: 0;
-  }
+.search_result .paging a {  /* Set pagination link styles */
+    display: inline-block;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+}
 
-  .search_result .paging a {  /* Set pagination link styles */
-  display: inline-block;
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-radius: 100px;
-  font-size: 12px;
-  }
+.search_result .paging a:first-child {  /* Remove left margin for the first pagination link */
+    margin-left: 0;
+}
 
-  .search_result .paging a:first-child {  /* Remove left margin for the first pagination link */
-  margin-left: 0;
-  }
+.search_result .paging a.bt {  /* Set button link styles */
+    border: 1px solid #eee;
+    background: #eee;
+}
 
-  .search_result .paging a.bt {  /* Set button link styles */
-  border: 1px solid #eee;
-  background: #eee;
-  }
+.search_result .paging a.num {  /* Set number link styles */
+    font-weight: 600;
+    color: green;
+}
 
-  .search_result .paging a.num {  /* Set number link styles */
-  font-weight: 600;
-  color: green;
-  }
+.search_result .paging a.num.on {  /* Set active number link styles */
+    background: green;
+    color: #fff;
+}
 
-  .search_result .paging a.num.on {  /* Set active number link styles */
-  background: green;
-  color: #fff;
-  }
+.search_result .paging_num {
+    margin-left: 10px;
+    margin-right: 10px;
+}
 
-  .search_result .paging_num {
-  margin-left: 10px;
-  margin-right: 10px;
-  }
-
-  .guide {
-  padding: 50px;
-  font-size: 10px;
-  margin-top: 70px;
-  margin-left: 100px;
-  margin-right: 100px;
-  width: 1200px;
-  }
-   </style>
+.guide {
+    padding: 50px;
+    font-size: 10px;
+    margin-top: 70px;
+    margin-left: 100px;
+    margin-right: 100px;
+    width: 1200px;
+}
+</style>
 </head>
 <body>
 <script type="javascript" src="script.js"></script>
 <div class="main_title">
-  <img class="logo_img" src="https://www.shutterstock.com/image-vector/novel-letter-mark-logo-vector-600w-2266746965.jpg" height="160" width="200">
+    <h1>Welcome to Novel Network</h1>
 </div>
-
+    
 <div class="menu">
-  <div class="profile">
-    <div th:if="${user != null}">
-      <p>환영합니다, <span th:text="${user.nickname}"></span>님!</p>
-      <a href="/logout" class="btn btn-warning">Logout</a>
+    <div class="profile">
+        <div class="nickname">
+          <h4>환영합니다, <span th:text="${user.nickname}"></span>님</h4>
+        </div>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" id="logout">로그아웃</button>
+        </form>
     </div>
-    <div th:if="${user == null}">
-      <p>Welcome, Guest!</p>
-      <a href="/home" class="btn btn-info">Login</a>
+    <div class="navigation_menu">
+        <ul>
+            <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+            <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+            <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+            <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+            <li><a th:href="@{/event}">*이벤트*</a></li>
+        </ul>
     </div>
-  </div>
-  <div class="navigation_menu">
-    <ul>
-      <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
-      <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
-      <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
-      <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
-      <li><a th:href="@{/event}">*이벤트*</a></li>
-    </ul>
-  </div>
-  <div class="search_box">
-    <form th:action="@{/search}" method="get">
-      <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
-      <select name="type">
-        <option value="title">Title</option>
-        <option value="content">Content</option>
-        <option value="writer">Writer</option>
-      </select>
-      <button class="search_btn" type="submit">검색</button>
-    </form>
-  </div>
-</div>
+    <div class="search_box">
+        <form th:action="@{/search}" method="get">
+            <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+            <select name="type">
+                <option value="title">Title</option>
+                <option value="content">Content</option>
+                <option value="writer">Writer</option>
+            </select>
+            <button class="search_btn" type="submit">검색</button>
+        </form>
+    </div>
+</div>    
 
 <div class="search_result">
   <ul>
