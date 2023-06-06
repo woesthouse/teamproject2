@@ -93,7 +93,6 @@ public class ReviewController {
             if (existingReview.getUserNumber().equals(user.getUserNumber())) {
                 List<Book> books = bookService.findAll();
                 model.addAttribute("books", books);
-                model.addAttribute("user", user);
                 model.addAttribute("review", existingReview);
                 return "editReview";
             } else {
@@ -105,8 +104,7 @@ public class ReviewController {
     }
 
     @PostMapping("/reviewBoard/edit/{reviewId}")
-    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @ModelAttribute Review review, HttpSession session
-                                            ,Book book) {
+    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @ModelAttribute Review review, HttpSession session) {
         User user = (User) session.getAttribute("user");
 
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
@@ -118,7 +116,8 @@ public class ReviewController {
         if (!existingReview.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-        existingReview.setBook(review.getBook());
+
+        existingReview.setBook(review.getBook()); //  <- 오류가 나는 것으로 추정 되는 부분
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setContent(review.getContent());
@@ -127,24 +126,6 @@ public class ReviewController {
         return new ResponseEntity<>("Review updated successfully!", HttpStatus.OK);
     }
 
-/*
-
-    @DeleteMapping("/post/delete/{postNumber}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postNumber, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-
-        if (user == null || !postService.findByPostNumber(postNumber).getUserNumber().equals(user.getUserNumber())) {
-            return new ResponseEntity<>("Error removing post", HttpStatus.BAD_REQUEST);
-        }
-
-        boolean isRemoved = postService.removePost(postNumber);
-        if (isRemoved) {
-            return new ResponseEntity<>("Post removed successfully!", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Error removing post", HttpStatus.BAD_REQUEST);
-        }
-    }
-*/
 }
 
 

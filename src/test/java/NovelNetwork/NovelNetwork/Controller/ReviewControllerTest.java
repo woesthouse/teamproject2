@@ -1,5 +1,7 @@
 package NovelNetwork.NovelNetwork.Controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import NovelNetwork.NovelNetwork.Domain.Book;
 import NovelNetwork.NovelNetwork.Domain.Review;
 import NovelNetwork.NovelNetwork.Domain.User;
 import NovelNetwork.NovelNetwork.Service.ReviewService;
@@ -10,7 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,6 +25,9 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -108,6 +115,26 @@ public class ReviewControllerTest {
                         .content(objectMapper.writeValueAsString(review))
                         .session(session))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void 정상적인_상황_테스트() {
+        Long reviewId = 1L;
+        Review review = new Review();
+        Book book = new Book();
+        User user = new User();
+        user.setUserNumber(1L);
+        Review existingReview = new Review();
+        existingReview.setUserNumber(1L);
+
+        when(session.getAttribute("user")).thenReturn(user);
+        when(reviewService.getReviewByReviewNumber(reviewId)).thenReturn(Optional.of(existingReview));
+        doNothing().when(reviewService).updateReview(any(Review.class));
+
+        ResponseEntity<String> response = reviewController.editPost(reviewId, review, session);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+        assertEquals("Review updated successfully!", response.getBody());
     }
 }
 
