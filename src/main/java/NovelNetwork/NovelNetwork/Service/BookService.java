@@ -44,7 +44,10 @@ public class BookService {
                     return book;
                 });
     }
-
+    public Book getBook(Integer id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+    }
     @Transactional
     public boolean delete(Integer bookId) {
         if (bookRepository.existsById(bookId)) {
