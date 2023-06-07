@@ -104,7 +104,8 @@ public class ReviewController {
     }
 
     @PostMapping("/reviewBoard/edit/{reviewId}")
-    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @ModelAttribute Review review, HttpSession session) {
+    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @RequestBody Review review, HttpSession session,
+                                           Book book) {
         User user = (User) session.getAttribute("user");
 
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
@@ -117,7 +118,8 @@ public class ReviewController {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
-        existingReview.setBook(review.getBook()); //  <- 오류가 나는 것으로 추정 되는 부분
+        existingReview.setBook(book);
+
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setContent(review.getContent());

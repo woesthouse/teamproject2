@@ -3,6 +3,60 @@
 <head>
     <title>Edit Review</title>
     <meta charset="UTF-8">
+    <style>
+    /* CSS 스타일링 */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+  </style>
+    <script>
+    function showPopup(message) {
+      var popup = document.getElementById("popup");
+      document.getElementById("popupMessage").innerText = message;
+      popup.style.display = "block";
+    }
+
+    function goBack() {
+      window.location.href = "/reviewBoard";
+    }
+
+    $(document).ready(function() {
+    $("form").submit(function(e) {
+      e.preventDefault();
+      var formData = {
+          title: $('#title').val(),
+          content: $('#content').val(),
+          starRating: $('#starRating').val(),
+          book: {
+              bookId: $('#book').val()
+          }
+      };
+      $.ajax({
+        url: window.location.pathname,
+        type: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        success: function(result) {
+          showPopup(result);
+          setTimeout(function(){ window.location.href = "/reviewBoard"; }, 3000);
+        },
+        error: function(xhr, status, error) {
+          showPopup(xhr.responseText);
+        }
+      });
+    });
+});
+</script>
+
 </head>
 <body>
 <div>
@@ -33,6 +87,12 @@
 <div>
     <a href="/reviewBoard">Back to Review Board</a>
 </div>
+
+<div id="popup">
+    <p id="popupMessage">Post updated successfully!</p>
+    <button onclick="goBack()">돌아가기</button>
+</div>
+
 </body>
 </html>
 

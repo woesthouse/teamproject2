@@ -131,7 +131,7 @@ public class ReviewControllerTest {
         when(reviewService.getReviewByReviewNumber(reviewId)).thenReturn(Optional.of(existingReview));
         doNothing().when(reviewService).updateReview(any(Review.class));
 
-        ResponseEntity<String> response = reviewController.editPost(reviewId, review, session);
+        ResponseEntity<String> response = reviewController.editPost(reviewId, review, session, book);
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
         assertEquals("Review updated successfully!", response.getBody());
