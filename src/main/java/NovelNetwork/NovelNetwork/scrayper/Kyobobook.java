@@ -30,7 +30,7 @@ public class Kyobobook {
     }
 
     public void scrapeBooksFromKyobobook() {
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
