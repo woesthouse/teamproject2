@@ -104,7 +104,8 @@ public class ReviewController {
     }
 
     @PostMapping("/reviewBoard/edit/{reviewId}")
-    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @ModelAttribute Review review, HttpSession session) {
+    public ResponseEntity<String> editPost(@PathVariable Long reviewId, @RequestBody Review review, HttpSession session,
+                                           Book book) {
         User user = (User) session.getAttribute("user");
 
         Optional<Review> optionalReview = reviewService.getReviewByReviewNumber(reviewId);
@@ -116,8 +117,14 @@ public class ReviewController {
         if (!existingReview.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
+        Book bookFromDb = bookService.getBook(review.getBook().getBookId());
+        existingReview.setBook(bookFromDb);
 
-        existingReview.setBook(review.getBook()); //  <- 오류가 나는 것으로 추정 되는 부분
+        //Book bookFromDb = bookService.getBook(book.getBookId());
+        //existingReview.setBook(bookFromDb);
+
+        //existingReview.setBook(book);
+
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());
         existingReview.setContent(review.getContent());
@@ -126,6 +133,22 @@ public class ReviewController {
         return new ResponseEntity<>("Review updated successfully!", HttpStatus.OK);
     }
 
+
+    @DeleteMapping("/review/delete/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+
+        if (user == null || !reviewService.findByReviewId(reviewId).getUserNumber().equals(user.getUserNumber())) {
+            return new ResponseEntity<>("Error removing review", HttpStatus.BAD_REQUEST);
+        }
+
+        boolean isRemoved = reviewService.removeReview(reviewId);
+        if (isRemoved) {
+            return new ResponseEntity<>("Review removed successfully!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error removing Review", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 
 
