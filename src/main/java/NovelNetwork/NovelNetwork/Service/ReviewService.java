@@ -39,6 +39,16 @@ public class ReviewService {
         reviewRepository.save(existingReview);
     }
 
+    public boolean removeReview(Long reviewId){
+
+        if ( reviewRepository.existsById(reviewId) ) {
+            reviewRepository.deleteById(reviewId);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     @Transactional
     public Review saveReviewPostWithBook(Review reviewPost, Integer bookId) {
         Book book = bookService.getBook(bookId);
