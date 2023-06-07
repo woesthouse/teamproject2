@@ -117,8 +117,10 @@ public class ReviewController {
         if (!existingReview.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
+        Book bookFromDb = bookService.getBook(book.getBookId());
+        existingReview.setBook(bookFromDb);
 
-        existingReview.setBook(book);
+        //existingReview.setBook(book);
 
         existingReview.setStarRating(review.getStarRating());
         existingReview.setTitle(review.getTitle());

@@ -17,7 +17,10 @@
       border: 1px solid #ccc;
       text-align: center;
     }
-  </style>
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script>
     function showPopup(message) {
       var popup = document.getElementById("popup");
@@ -29,19 +32,18 @@
       window.location.href = "/reviewBoard";
     }
 
-    $(document).ready(function() {
-    $("form").submit(function(e) {
-      e.preventDefault();
+    function submitReview() {
+      var reviewId = $('#reviewId').val(); // Get the review ID from the hidden field
       var formData = {
-          title: $('#title').val(),
-          content: $('#content').val(),
-          starRating: $('#starRating').val(),
-          book: {
-              bookId: $('#book').val()
-          }
+        title: $('#title').val(),
+        content: $('#content').val(),
+        starRating: $('#starRating').val(),
+        book: {
+          bookId: $('#book').val()
+        }
       };
       $.ajax({
-        url: window.location.pathname,
+        url: '/reviewBoard/edit/' + reviewId, // Use the review ID in the URL
         type: 'POST',
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -53,37 +55,35 @@
           showPopup(xhr.responseText);
         }
       });
-    });
-});
-</script>
+    }
+    </script>
 
 </head>
 <body>
 <div>
     <h1>Edit Review</h1>
-    <form th:action="@{/reviewBoard/edit/{reviewId}(reviewId=${review.reviewId})}" th:object="${review}" method="post">
-        <input type="hidden" th:field="*{reviewId}">
-        <div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" th:field="*{title}" required>
-        </div>
-        <div>
-            <label for="content">Content:</label>
-            <textarea id="content" th:field="*{content}" required></textarea>
-        </div>
-        <div>
-            <label for="book">Book:</label>
-            <select id="book" name="bookId">
-                <option th:each="book : ${books}" th:value="${book.bookId}" th:text="${book.title}"></option>
-            </select>
-        </div>
-        <div>
-            <label for="starRating">Rating:</label>
-            <input type="number" id="starRating" th:field="*{starRating}" required min="1" max="5">
-        </div>
-        <button type="submit">Update Review</button>
-    </form>
+    <input type="hidden" id="reviewId" th:value="${review.reviewId}">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" th:value="${review.title}" required>
+    </div>
+    <div>
+        <label for="content">Content:</label>
+        <textarea id="content" th:text="${review.content}" required></textarea>
+    </div>
+    <div>
+        <label for="book">Book:</label>
+        <select id="book" name="bookId">
+            <option th:each="book : ${books}" th:value="${book.bookId}" th:text="${book.title}" th:selected="${book.bookId == review.book.bookId}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="starRating">Rating:</label>
+        <input type="number" id="starRating" th:value="${review.starRating}" required min="1" max="5">
+    </div>
+    <button type="button" onclick="submitReview()">Update Review</button>
 </div>
+
 <div>
     <a href="/reviewBoard">Back to Review Board</a>
 </div>
@@ -95,4 +95,5 @@
 
 </body>
 </html>
+
 
