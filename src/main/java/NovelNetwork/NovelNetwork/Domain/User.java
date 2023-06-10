@@ -1,6 +1,7 @@
 package NovelNetwork.NovelNetwork.Domain;
 
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 
 @Entity

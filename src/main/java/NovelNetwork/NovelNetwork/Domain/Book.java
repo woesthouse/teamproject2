@@ -1,15 +1,18 @@
 package NovelNetwork.NovelNetwork.Domain;
 
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 
 @Entity
+@NotNull
 @Table(name = "book")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bookId;
+
 
     private String title;
 

@@ -92,6 +92,7 @@ public class UserController {
         if (user != null) {
             model.addAttribute("user", user);
         }
+        model.addAttribute("top10Books", bookService.getTop10());
         return "logginedhome";
     }
 
