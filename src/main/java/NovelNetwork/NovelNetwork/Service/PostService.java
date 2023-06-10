@@ -25,18 +25,22 @@ public class PostService {
        return postRepository.findAll();
     }
 
-    public Post findByPostNumber(long postNumber)
-    {
-        return postRepository.findByPostNumber(postNumber);
-    }
+
 
     public void addPost(Post post) {
         postRepository.save(post);
     }
 
-    public Optional<Post> getPostByPostNumber(Long PostNumber){
-       return postRepository.findById(PostNumber);
+    public Post findByPostNumber(long postNumber) {
+        return postRepository.findByPostNumber(postNumber)
+                .orElse(null);
     }
+
+    public Post getPostByPostNumber(Long postNumber) {
+        return postRepository.findByPostNumber(postNumber)
+                .orElse(null);
+    }
+
 
     public void updatePost(Post existingPost) {
         postRepository.save(existingPost);

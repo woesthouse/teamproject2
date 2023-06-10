@@ -64,23 +64,28 @@ public class PostController {
     }
 
     @GetMapping("/post/{postNumber}")
-    public String postDetail(@PathVariable Long postNumber, Model model) {
-        Optional<Post> optionalPost = postService.getPostByPostNumber(postNumber);
-        if (optionalPost.isPresent()) {
-            model.addAttribute("post", optionalPost.get());
+    public String postDetail(@PathVariable Long postNumber, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        Post post = postService.getPostByPostNumber(postNumber);
+        if (post != null) {
+            model.addAttribute("post", post);
             return "postDetail";
         } else {
+            model.addAttribute("error", "No post found with id: " + postNumber);
             return "error";
         }
+
     }
+
 
     @GetMapping("/post/edit/{postNumber}")
     public String showEditForm(@PathVariable Long postNumber, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        Optional<Post> optionalPost = postService.getPostByPostNumber(postNumber);
+        Post post = postService.getPostByPostNumber(postNumber);
 
-        if (optionalPost.isPresent()) {
-            Post existingPost = optionalPost.get();
+        if (post != null) {
+            Post existingPost = post;
             if (existingPost.getUserNumber().equals(user.getUserNumber())) {
                 model.addAttribute("post", existingPost);
                 return "editPost";
@@ -96,12 +101,11 @@ public class PostController {
     public ResponseEntity<String> editPost(@PathVariable Long postNumber, @RequestBody Post post, HttpSession session) {
         User user = (User) session.getAttribute("user");
 
-        Optional<Post> optionalPost = postService.getPostByPostNumber(postNumber);
-        if (!optionalPost.isPresent()) {
+        Post existingPost = postService.getPostByPostNumber(postNumber);
+        if (existingPost == null) {
             return new ResponseEntity<>("No post found", HttpStatus.NOT_FOUND);
         }
 
-        Post existingPost = optionalPost.get();
         if (!existingPost.getUserNumber().equals(user.getUserNumber())) {
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
@@ -112,6 +116,7 @@ public class PostController {
 
         return new ResponseEntity<>("Post updated successfully!", HttpStatus.OK);
     }
+
 
 
 
