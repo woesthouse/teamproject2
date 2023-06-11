@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" href="../static/style_loginfailed.css">  <!-- 스타일시트 -->
+  <title>로그인 실패</title>
+</head>
+<body>
+<div class="error-message">
+  <h1>로그인 정보가 올바르지 않습니다!</h1>
+  <p>다시 시도해주세요.</p>
+  <form th:action="@{/home}" method="get">
+    <button type="submit">돌아가기</button>
+  </form>
+</div>
+</body>
+</html>

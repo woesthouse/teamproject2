@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style_logginedhome.css}">  <!-- 스타일시트 -->
+    <title>Main Page</title>
+</head>
+<body>
+<div class="main_title">
+  <h1>Welcome to Novel Network</h1>
+</div>
+<div class="menu">
+  <div class="profile">
+    <div class="nickname">
+      <h4>환영합니다, <span th:text="${user.nickname}"></span>님</h4>
+    </div>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" id="logout">로그아웃</button>
+    </form>
+  </div>
+  <div class="navigation_menu">
+    <ul>
+      <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+      <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+      <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+      <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+      <li><a th:href="@{/event}">*이벤트*</a></li>
+    </ul>
+  </div>
+  <div class="search_box">
+    <form th:action="@{/search}" method="get">
+      <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+      <select name="type">
+        <option value="title">Title</option>
+        <option value="content">Content</option>
+        <option value="writer">Writer</option>
+      </select>
+      <button class="search_btn" type="submit">검색</button>
+    </form>
+  </div>
+</div>
+
+<div class="popular_notice_wrap">
+
+  <div class="popular">
+    <ul>
+      <li class="popular_all"><a th:href="@{/totalTop10}">전체 Top 10</a></li>
+      <li class="popular_newest"><a th:href="@{/recentTop10}">최신 Top 10</a></li>
+    </ul>
+  </div>
+
+  <div class="notice">
+    <h2 class="board_title">공지 게시판</h2>
+    <table class="board_list">
+      <tbody>
+      <tr th:each="notice : ${notices}">
+        <td class="tit">
+          <a th:href="@{'/notice/' + ${notice.id}}" th:text="${notice.title}"></a>
+        </td>
+        <td th:text="${notice.author}">관리자</td>
+        <td th:text="${#dates.format(notice.date, 'yyyy-MM-dd')}">2023-05-05</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="newest_post">
+  <h3 class="newest_post_title">최근에 작성된 글</h3>
+  <ul th:each="post : ${recentPosts}">
+    <li><a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a></li>
+  </ul>
+</div>
+
+<div class="guide">
+  <p>안내: 본 웹사이트는 독서 토론을 위한 커뮤니티입니다. 회원 여러분께서는 서로 존중하고 상호작용할 수
+    있는 환경을 유지해 주시기 바랍니다. 욕설, 비방, 혐오 발언 등은 엄격히 금지되며, 서로의 다양한
+    의견을 존중하는 태도를 갖고 참여해주세요. 토론은 건설적으로 이루어져야 하며, 사회적인 규범과 법률을
+    준수해야 합니다. 어떤 토론도 개인적인 공격이나 혐오 표현으로 이어지지 않도록 주의해주세요. 감사합니다.
+  </p>
+</div>
+
+<!-- 이하 생략: home.html의 기존 내용 (인기 작품, 공지사항 등) -->
+</body>
+</html>

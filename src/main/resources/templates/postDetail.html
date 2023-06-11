@@ -2,17 +2,145 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/style_postDetail.css}">  <!-- 스타일시트 -->
   <title>Post Detail</title>
 </head>
 <body>
-<h1>Post Details</h1>
-
-<div>
-  <h2 th:text="${post.title}"></h2> <!-- 게시물 제목 -->
-  <p>By: <span th:text="${post.writer}"></span></p> <!-- 게시물 작성자 -->
-  <p th:text="${post.content}"></p> <!-- 게시물 내용 -->
+<div class="main_title">
+  <h1><a href="/home" class="btn btn-success">Welcome to Novel Network</a></h1>
 </div>
 
-<a th:href="@{'/noticeBoard'}">Back to the Notice Board</a> <!-- 공지사항 게시판으로 돌아가기 -->
+<div class="menu">
+  <div class="profile">
+    <div class="nickname">
+      <h4>환영합니다, <span th:text="${user.nickname ?: ''}"></span>님</h4>
+    </div>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" id="logout">로그아웃</button>
+    </form>
+  </div>
+  <div class="navigation_menu">
+    <ul>
+      <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+      <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+      <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+      <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+      <li><a th:href="@{/event}">*이벤트*</a></li>
+    </ul>
+  </div>
+  <div class="search_box">
+    <form th:action="@{/search}" method="get">
+      <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+      <select name="type">
+        <option value="title">Title</option>
+        <option value="content">Content</option>
+        <option value="writer">Writer</option>
+      </select>
+      <button class="search_btn" type="submit">검색</button>
+    </form>
+  </div>
+</div>
+
+<div class="post_wrap">
+  <div class="board_title">
+    <h2>공지 게시판</h2>
+  </div>
+  <div class="post_detail">
+    <h2 class="post_title" th:text="${post.title}">아무튼 제목</h2>
+
+    <div class="post_meta">
+      <span th:text="${post.writer}">아무튼 작성자</span> <!-- 게시물 작성자 -->
+      <span>2023.05.06.  13:30</span>
+       <span>조회 10</span>
+    </div>
+    <div class="post_content">
+      <p th:text="${post.content}"> <!-- 게시물 내용 -->
+      </p>
+    </div>
+    <div class="post_footer">
+      <div id="comment_num">댓글 3</div>  <!-- 댓글 수 -->
+      <div class="comment_list">
+        <!--댓글이 추가되는 공간-->
+      </div>
+      <div class="comment_input_container">
+        <form>
+          <div class="comment_writer" th:text="${user.nickname ?: ''}">아무튼 이름</div>
+          <div class="form-group">
+            <textarea id="comment_input" name="comment_input" placeholder="댓글을 입력하세요" required></textarea>
+          </div>
+          <div class="comment_btn">
+            <input type="submit" value="등록" id="comment_btn_id"><br>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <hr>
+</div>
+<div class="back_to_list">
+  <a th:href="@{'/noticeBoard'}">전체글</a> <!-- 공지사항 게시판으로 돌아가기 -->
+</div>
+
+<div class="guide">
+  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    Lorem Ipsum has been the industry's standard dummy text ever since the
+    1500s, when an unknown printer took a galley of type and scrambled it to
+    make a type specimen book.
+  </p>
+</div>
+
+<!--<div>-->
+<!--  <h2 th:text="${post.title}"></h2> &lt;!&ndash; 게시물 제목 &ndash;&gt;-->
+<!--  <p>By: <span th:text="${post.writer}"></span></p> &lt;!&ndash; 게시물 작성자 &ndash;&gt;-->
+<!--  <p th:text="${post.content}"></p> &lt;!&ndash; 게시물 내용 &ndash;&gt;-->
+<!--</div>-->
+
+<!--<a th:href="@{'/noticeBoard'}">Back to the Notice Board</a> &lt;!&ndash; 공지사항 게시판으로 돌아가기 &ndash;&gt;-->
 </body>
+
+<script>
+  let totalComment = 20;  //총 댓글 수  //임의로 설정. 백엔드 코드 추가 요
+
+  // function print_comment(){
+  //
+  //   let comment_board = document.querySelector(".comment_list");  //댓글 출력 공간
+  //
+  //   for(let i=1; i<=totalComment; i++){
+  //     let comment = document.createElement("div");
+  //     comment.className = "comment";
+  //
+  //     let classname = ["writer", "content", "date"]
+  //
+  //     let comment_data = [data[i].writer, data[i].content, data[i].date];
+  //
+  //     for(var j=0; j<classname.length; j++){    // 댓글 생성
+  //       let div = document.createElement("div");
+  //       div.className = classname[j];
+  //       div.textContent = comment_data[j];
+  //       comment.appendChild(div);
+  //     }
+  //
+  //     comment_board.appendChild(comment);    //댓글 추가
+  //   }
+  //
+  // }
+  //
+  // window.onload = function(){
+  //
+  //   //댓글 출력
+  //   print_comment(1)
+  // }
+
+  document.getElementById("comment_input").addEventListener("input", function() {  //입력란에 텍스트 입력이 발생했을 때 등록 버튼 스타일 변경
+    let commentInput = document.getElementById("comment_input");
+    let commentBtn = document.getElementById("comment_btn_id");
+
+    if (commentInput.value.trim() !== "") {
+      commentBtn.classList.add("active");
+    } else {
+      commentBtn.classList.remove("active");
+    }
+  });
+
+</script>
 </html>

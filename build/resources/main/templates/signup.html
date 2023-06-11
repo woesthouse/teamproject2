@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <link rel="stylesheet" th:href="@{/css/style_signup.css}">
+  <title>Signup</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+        $(document).ready(function() {
+            // Initially disable the signup button
+            $('#signupButton').prop('disabled', true);
+
+            $("#request-code-button").click(function() {
+                var email = $("#email").val();
+
+                $.ajax({
+                    url: '/requestVerificationCode',
+                    type: 'post',
+                    data: {email: email},
+
+                    success: function() {
+                        alert("입력하신 Email로 인증번호가 전송되었습니다.");
+                    },
+
+                    error: function() {
+                        alert("There was an error sending the verification code.");
+                    }
+                });
+            });
+
+            $("#verify-code-button").click(function() {
+                var email = $("#email").val();
+                var enteredCode = $("#code").val();
+
+                $.ajax({
+                    url: '/verifyCode',
+                    type: 'post',
+                    data: {
+                        email: email,
+                        enteredCode: enteredCode
+                    },
+
+                    success: function(response) {
+                        if (response === 'true') {
+                            // If verification is successful, enable the signup button and show a message
+                            $('#signupButton').prop('disabled', false);
+                            alert("이메일 인증을 성공하였습니다!");
+                        } else {
+                            // If verification fails, show an alert
+                            alert("Verification failed. Please check the code.");
+                        }
+                    },
+
+                    error: function() {
+                        alert("There was an error verifying the code.");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="main_title">
+  <img class="logo_img" src="https://www.shutterstock.com/image-vector/
+            novel-letter-mark-logo-vector-600w-2266746965.jpg" height="200" width="250">
+</div>
+<form th:action="@{/signup}" method="post" id="signupForm">
+  <div>
+    <label for="id">아이디</label>
+    <input type="text" name="id" id="id" required>
+  </div>
+  <div>
+    <label for="password">비밀번호</label>
+    <input type="password" name="password" id="password" required>
+  </div>
+  <div>
+    <label for="confirm-password">비밀번호 확인</label>
+    <input type="password" name="confirm_password" id="confirm-password" required>
+  </div>
+  <div>
+    <label for="username">이름</label>
+    <input type="text" name="username" id="username" required>
+  </div>
+  <div>
+    <label for="nickname">닉네임</label>
+    <input type="text" name="nickname" id="nickname" required>
+  </div>
+  <div>
+    <label for="email">이메일</label>
+    <input type="text" name="email" id="email" required>
+  </div>
+  <div>
+    <button type="button" id="request-code-button">인증 코드 요청</button>
+  </div>
+  <div>
+    <label for="code">인증 코드</label>
+    <input type="text" name="code" id="code" required>
+  </div>
+  <div>
+    <button type="button" id="verify-code-button">인증 코드 확인</button>
+  </div>
+  <div class="buttons">
+    <button type="submit" id="signupButton">회원가입</button>
+    <button type="button" onclick="location.href='/home'">돌아가기</button>
+  </div>
+</form>
+
+</body>
+</html>

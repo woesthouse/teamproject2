@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Board</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Review Board</h1>
+
+    <div th:if="${user != null}">
+        <p>환영합니다, <span th:text="${user.nickname}"></span>님!</p>
+        <a href="/logout" class="btn btn-warning">Logout</a>
+    </div>
+    <div th:if="${user == null}">
+        <p>Welcome, Guest!</p>
+        <a href="/home" class="btn btn-info">Login</a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">BookTitle</th>
+            <th scope="col">Rating</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}">
+            <td th:text="${post.reviewId}"></td>
+            <td>
+                <a th:href="@{/reviews/{reviewId}(reviewId=${post.reviewId})}" th:text="${post.title}"></a>
+            </td>
+            <td th:text="${post.writer}"></td>
+            <td th:text="${post.book.title}"></td>
+            <td th:text="${post.starRating}"></td>
+            <td>
+                <a th:href="@{/review/edit/{id}(id=${post.reviewId})}"
+                   th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-primary' : 'btn btn-primary disabled'}">Edit</a>
+                <a href="#"
+                   th:data-post-number="${post.reviewId}"
+                   th:onclick="'confirmDelete(' + ${post.reviewId} + ');'"
+                   th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-danger' : 'btn btn-danger disabled'}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/createReview" class="btn btn-success">Create Post</a>
+    <a href="/home" class="btn btn-success">Back to Home</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  function confirmDelete(reviewId) {
+    var result = confirm("정말 삭제하시겠습니까?");
+    if (result) {
+      $.ajax({
+        url: "/review/delete/" + reviewId,
+        type: 'DELETE',
+        success: function(result) {
+          alert("삭제가 완료되었습니다!");
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          alert("삭제 실패");
+        }
+      });
+    }
+  }
+</script>
+
+</body>
+</html>

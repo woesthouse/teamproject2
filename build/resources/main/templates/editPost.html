@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style_editPost.css}"> <!-- 스타일시트 -->
+    <title>글 수정</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function showPopup(message) {
+      var popup = document.getElementById("popup");
+      document.getElementById("popupMessage").innerText = message;
+      popup.style.display = "block";
+    }
+
+    function goBack() {
+      window.location.href = "/noticeBoard";
+    }
+
+    $(document).ready(function() {
+      $("form").submit(function(e) {
+        e.preventDefault();
+        var formData = {
+            title: $('#title').val(),
+            content: $('#content').val()
+        };
+        $.ajax({
+          url: window.location.pathname,
+          type: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(result) {
+            showPopup(result);
+            setTimeout(function(){ window.location.href = "/noticeBoard"; }, 3000);
+          },
+          error: function(xhr, status, error) {
+            showPopup(xhr.responseText);
+          }
+        });
+      });
+    });
+</script>
+
+</head>
+<body>
+<div class="main_title">
+    <h1>Welcome to Novel Network</h1>
+</div>
+    
+<div class="menu">
+    <div class="navigation_menu">
+        <ul>
+            <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+            <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+            <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+            <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+            <li><a th:href="@{/event}">*이벤트*</a></li>
+        </ul>
+    </div>
+</div>      
+<div class="container">
+  <div class="write_title">
+    <h1>글 수정</h1>
+  </div>
+  <div class="write_area">
+    <form th:action="@{/post/edit/{postNumber}(postNumber=${post.postNumber})}" method="post" th:object="${post}">
+      <div class="form-group">
+        <input type="text" id="title" name="title" th:value="${post.title}" placeholder="제목을 입력하세요" required>
+      </div>
+      <div class="form-group">
+        <textarea id="content" name="content" th:text="${post.content}" placeholder="내용을 입력하세요" required></textarea>
+      </div>
+      <input id="file_btn" type="file" name="SelectFile">
+      <div class="post_btn">
+        <input type="submit" id="post_btn_id" value="등록">
+      </div>
+    </form>
+    
+    <div id="popup">
+      <p id="popupMessage">수정이 완료되었습니다!</p>
+      <button onclick="goBack()">돌아가기</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

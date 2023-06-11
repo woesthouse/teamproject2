@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>회원가입 실패</title>
+  <style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .error-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .error-message h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .error-message p {
+        font-size: 18px;
+    }
+
+    .button {
+        margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="error-message">
+  <h1>기존에 존재하는 회원입니다!</h1>
+  <a th:href="@{/signup}">Sign Up</a>
+</div>
+</body>
+</html>

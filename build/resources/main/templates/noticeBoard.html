@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notice Board</title>
+    <link rel="stylesheet" th:href="@{/css/style_noticeBoard.css}">
+</head>
+<body>
+<div class="main_title">
+    <h1><a href="/home" class="btn btn-success">Welcome to Novel Network</a></h1>
+</div>  
+<div class="menu">
+    <div class="profile">
+        <div th:if="${user != null}">
+            <div class="nickname">
+                <h4>환영합니다, <span th:text="${user.nickname}"></span>님</h4>
+            </div>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" id="logout">로그아웃</button>
+            </form>
+            <!-- <a href="/logout" class="btn btn-warning">Logout</a> -->
+        </div>
+        <div th:if="${user == null}">
+            <form th:action="@{/login}" method="post">
+                <label>ID</label>
+                <input class="id_txt" type="text" name="id"/>
+                <br>
+                <label>P/W</label>
+                <input class="pw_txt" type="password" name="password"/>
+                <button class="login_btn" type="submit">로그인</button>
+            </form>
+        
+            <div class="sign_up">
+                <a th:href="@{/signup}">회원가입</a>
+            </div>
+            <!-- <a href="/home" class="btn btn-info">Login</a> -->
+        </div>
+    </div>
+    <div class="navigation_menu">
+        <ul>
+            <li><a th:href="@{/noticeBoard}">공지 게시판</a></li>
+            <li><a th:href="@{/freeBoard}">자유 게시판</a></li>
+            <li><a th:href="@{/reviewBoard}">리뷰 게시판</a></li>
+            <li><a th:href="@{/discussionBoard}">토론 게시판</a></li>
+            <li><a th:href="@{/event}">*이벤트*</a></li>
+        </ul>
+    </div>
+    <div class="search_box">
+        <form th:action="@{/search}" method="get">
+            <input class="search_txt" type="text" name="keyword" placeholder="검색어를 입력하세요"/>
+            <select name="type">
+                <option value="title">Title</option>
+                <option value="content">Content</option>
+                <option value="writer">Writer</option>
+            </select>
+            <button class="search_btn" type="submit">검색</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="board_title">공지 게시판</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="post_num">번호</th>
+                <th scope="col" class="post_title">제목</th>
+                <th scope="col" class="post_writer">작성자</th>
+                <th scope="col" class="post_action"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.postNumber}"></td>
+                <td>
+                    <a th:href="@{/post/{postNumber}(postNumber=${post.postNumber})}" th:text="${post.title}"></a>
+                </td>
+                <td th:text="${post.writer}"></td>
+                <td class="post_action_td">
+                    <a th:href="@{/post/edit/{id}(id=${post.postNumber})}"
+                        th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-primary' : 'btn btn-primary disabled'}">수정</a>
+                    <a href="#"
+                    th:data-post-number="${post.postNumber}"
+                    th:onclick="'confirmDelete(' + ${post.postNumber} + ');'"
+                    th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-danger' : 'btn btn-danger disabled'}">삭제</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/createPost"><button id="write">글쓰기</button></a>
+    <!-- <a href="/home" class="btn btn-success">홈으로</a> -->
+
+    <div class="paging">
+        <button class="first_page" onclick="">첫 페이지</button>
+        <button class="before_page" onclick="before()">이전 페이지</button>
+        <span class="paging_num">
+            <!--페이지 번호 버튼이 추가되는 공간-->
+        </span>
+        <button class="next_page" onclick="next()">다음 페이지</button>
+        <button class="last_page" onclick="">마지막 페이지</button>
+    </div>
+</div>
+<div class="guide">
+    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+        Lorem Ipsum has been the industry's standard dummy text ever since the 
+        1500s, when an unknown printer took a galley of type and scrambled it to 
+        make a type specimen book.
+    </p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script th:inline="javascript">
+
+/*<![CDATA[*/
+let postListSize = /*[[${postListSize}]]*/ 'default';   //총 게시글 수
+let page_num = 15;     //한 페이지 당 출력되는 게시글 개수
+let paging_num = 5;    //한 번에 출력될 수 있는 최대 페이지 번호 개수
+let totalPaging = postListSize%page_num == 0 ? postListSize/page_num : (postListSize/page_num)+1;  //페이지 번호 총 개수
+let current_paging = 1;   //보여지고 있는 페이지 번호들 중 가장 작은 번호   //1로 초기화
+let selected_page = 1;    //선택된 페이지
+
+showPosts(selected_page);
+
+    function showPosts(page) {
+        let postList = /*[[${postList}]]*/ 'default';  //게시글 목록
+
+        let startIndex = (page - 1) * page_num;
+        let endIndex = Math.min(startIndex + page_num, postList.length);
+
+        let postTable = document.querySelector(".post_info tbody");
+        postTable.innerHTML = "";
+
+        for (let i = startIndex; i < endIndex; i++) {
+            let post = postList[i];
+
+            let row = document.createElement("tr");
+            let postNumberCell = document.createElement("td");
+            let titleCell = document.createElement("td");
+            let writerCell = document.createElement("td");
+            let actionCell = document.createElement("td");
+
+            postNumberCell.innerHTML = `${post.postNumber}`;
+            titleCell.innerHTML = `<a href="/post/${post.postNumber}">${post.title}</a>`;
+            writerCell.innerHTML = `${post.writer}`;
+            actionCell.innerHTML = `<a href="/post/edit/${post.postNumber}" class="btn btn-primary">수정</a> | <a href="#" data-post-number="${post.postNumber}" onclick="confirmDelete(${post.postNumber})" class="btn btn-danger">삭제</a>`;
+
+            // postNumberCell.innerHTML = `th:text=${post.postNumber}`;
+            // titleCell.innerHTML = `<a th:href="@/post/{postNumber}(postNumber=${post.postNumber})}" th:text=${post.title}</a>`;
+            // writerCell.innerHTML = `th:text=${post.writer}`;
+            // actionCell.innerHTML = `<a th:href="@{/post/edit/{id}(id=${post.postNumber})}" th:class="${user != null && post.userNumber == user.userNumber ? 'btn btn-primary' : 'btn btn-primary disabled'}">수정</a> | <a href="#" th:data-post-number="${post.postNumber}" th:onclick="'confirmDelete(' + ${post.postNumber} + ');'" class="${user != null && post.userNumber == user.userNumber ? 'btn btn-danger' : 'btn btn-danger disabled'}">삭제</a>`;
+
+            actionCell.classList.add("post_action_td");
+
+            row.appendChild(postNumberCell);
+            row.appendChild(titleCell);
+            row.appendChild(writerCell);
+            row.appendChild(actionCell);
+
+            postTable.appendChild(row);
+        }
+    }
+
+    function print_paging(front_paging){   //front_paging: 새로 출력할 페이지 네비게이션의 시작 페이지 번호
+        current_paging = front_paging;
+
+        //페이지 번호를 추가할 공간
+        let paging_num_box = document.querySelector(".paging_num");
+
+        //기존 페이지 모두 삭제
+        paging_num_box.replaceChildren();
+        console.log("remove");
+
+        //front_paging부터 totalPaging 또는 paging_num까지 생성 및 추가
+        for(let i=front_paging; i<=totalPaging && i<front_paging+paging_num; i++){
+            console.log("add element");
+
+            //버튼 생성
+            let button = document.createElement("button");
+            button.className = "paging_button"; // 버튼에 클래스를 추가
+            button.textContent = i;
+
+            //현재 선택된 페이지면 스타일 변경
+            if(i === selected_page){
+                button.style.backgroundColor = "green";
+                button.style.color = "white";
+            }
+
+            //버튼 클릭하면 게시글 변경
+            button.addEventListener("click", (function(i){
+                return function(event){
+                    selected_page = i;
+                    showPosts(i)
+
+                let buttons = document.querySelectorAll(".paging_button");
+                for(let j=0; j<buttons.length; j++){
+                    buttons[j].style.backgroundColor = ""; // 원래 스타일로
+                    buttons[j].style.color = "green";
+                }
+                // 클릭 된 버튼에만 새로운 스타일을 적용
+                this.style.backgroundColor = "green"; // 클릭된 버튼의 스타일을 변경
+                this.style.color = "white";
+            }
+
+            })(i));
+
+            //페이지 버튼 리스트에 추가
+            paging_num_box.appendChild(button);
+        }
+    }
+
+    function before(){
+        if(current_paging <= 5){  //1페이지 이전 페이지는 없음
+            return;
+        }
+        print_paging(current_paging-paging_num)
+        console.log("이전");
+    }
+
+    function next(){
+        if(current_paging <= totalPaging && current_paging > totalPaging-(totalPaging%paging_num) ){  //마지막 페이지 다음 페이지는 없음
+            return;
+        }
+        print_paging(current_paging+paging_num)
+        console.log("다음");
+    }
+
+    window.onload = function(){
+
+        //게시글 데이터 출력
+        showPosts(1)
+
+        //페이지 출력
+        print_paging(1)
+    }
+
+    function confirmDelete(postNumber) {
+        var result = confirm("정말 삭제하시겠습니까?");
+        if (result) {
+            $.ajax({
+                url: "/post/delete/" + postNumber,
+                type: 'DELETE',
+                success: function(result) {
+                    alert("삭제가 완료되었습니다!");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    alert("삭제 실패");
+                }
+            });
+        }
+    }
+/*]]>*/
+
+/*
+let totalPost = 120;   //총 게시글 수  
+let page_num = 15;     //한 페이지 당 출력되는 게시글 개수
+let paging_num = 5;    //한 번에 출력될 수 있는 최대 페이지 번호 개수
+let totalPaging = totalPost%page_num == 0 ? totalPost/page_num : (totalPost/page_num)+1;  //페이지 번호 총 개수
+let current_paging = 1;   //보여지고 있는 페이지 번호들 중 가장 작은 번호   //1로 초기화
+let selected_page = 1;    //선택된 페이지 
+
+let data = new Array();  //게시글 데이터를 담은 배열
+
+//게시글 데이터를 담은 객체 임의로 추가
+for(let i=1; i<=totalPost; i++){
+    data[i] = {
+        notice_num: i,        //게시글 번호
+        title: "제목"+i,      //게시글 제목
+        writer: "작성자"+i,   //작성자
+        date: "2023-05-15",  //작성일
+        hits: 20,            //조회 수
+        recommed: 5          //추천 수
+    }
+}
+
+//게시글 데이터 출력
+function print_post_data(paging){
+
+    //초기화
+    //게시글 title 제외 모두 제거 
+    let post_list = document.querySelectorAll(".table tbody tr");
+            post_list.forEach(function(item){
+                item.remove();
+            })
+
+    let notice_board = document.querySelector(".table tbody");  //게시글 출력 공간
+    let start = totalPost-page_num*(paging-1);   //출력 첫 페이지 번호
+    for(let i=start; i>=1 && i>start-page_num; i--){
+        let post = document.createElement("tr");
+        post.className = "data_row";
+
+        let classname = ["post_num", "post_title", "post_writer"]
+
+        let post_data = [data[i].notice_num, data[i].title, data[i].writer];
+
+        for(let j=0; j<classname.length; j++){    //게시글 생성
+            let td = document.createElement("td");
+            td.className = classname[j];
+            td.textContent = post_data[j];
+            post.appendChild(td);
+        }
+
+        notice_board.appendChild(post);    //게시글 추가 
+    }
+    
+}
+
+//페이지 출력
+
+function print_paging(front_paging){
+    current_paging = front_paging;
+
+    //페이지 번호를 추가할 공간
+    let paging_num_box = document.querySelector(".paging_num");
+
+    //기존 페이지 모두 삭제
+    paging_num_box.replaceChildren();
+    console.log("remove");
+
+    //front_paging부터 totalPaging 또는 paging_num까지 생성 및 추가
+    for(let i=front_paging; i<=totalPaging && i<front_paging+paging_num; i++){
+        console.log("add element");
+
+        //버튼 생성
+        let button = document.createElement("button");
+        button.className = "paging_button"; // 버튼에 클래스를 추가
+        button.textContent = i;
+
+        //현재 선택된 페이지면 스타일 변경
+        if(i === selected_page){
+            button.style.backgroundColor = "green";
+            button.style.color = "white";
+        }
+
+        //버튼 클릭하면 게시글 변경
+        button.addEventListener("click", (function(i){
+            return function(event){
+                selected_page = i;
+                print_post_data(i)
+
+            let buttons = document.querySelectorAll(".paging_button");
+            for(let j=0; j<buttons.length; j++){
+                buttons[j].style.backgroundColor = ""; // 원래 스타일로
+                buttons[j].style.color = "green";
+            }
+            // 클릭 된 버튼에만 새로운 스타일을 적용
+            this.style.backgroundColor = "green"; // 클릭된 버튼의 스타일을 변경
+            this.style.color = "white";
+        }
+
+        })(i));
+
+        //페이지 버튼 리스트에 추가
+        paging_num_box.appendChild(button);
+    }
+}
+
+function before(){
+    if(current_paging <= 5){  //1페이지 이전 페이지는 없음
+        return;
+    }
+    print_paging(current_paging-paging_num)
+    console.log("이전");
+}
+
+function next(){
+    if(current_paging <= totalPaging && current_paging > totalPaging-(totalPaging%paging_num) ){  //마지막 페이지 다음 페이지는 없음 
+        return;
+    }
+    print_paging(current_paging+paging_num)
+    console.log("다음");
+}
+
+window.onload = function(){
+
+    //게시글 데이터 출력
+    print_post_data(1)
+
+    //페이지 출력
+    print_paging(1)
+}
+
+function confirmDelete(postNumber) {
+    var result = confirm("정말 삭제하시겠습니까?");
+    if (result) {
+        $.ajax({
+            url: "/post/delete/" + postNumber,
+            type: 'DELETE',
+            success: function(result) {
+                alert("삭제가 완료되었습니다!");
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert("삭제 실패");
+            }
+        });
+    }
+}
+*/
+</script>
+
+</body>
+</html>
